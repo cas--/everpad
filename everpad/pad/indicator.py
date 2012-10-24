@@ -38,16 +38,8 @@ class Indicator(QSystemTrayIcon):
                 20, Note.ORDER_UPDATED_DESC,
             )
             if len(notes) or self.app.provider.is_first_synced():
-                self.menu.addAction(self.tr('All Notes'), self.show_all_notes)
-                self.menu.addSeparator()
-                for note_struct in notes:
-                    note = Note.from_tuple(note_struct)
-                    title = note.title[:40].replace('&', '&&')
-                    self.menu.addAction(title, Slot()(
-                        partial(self.open, note=note)
-                    ))
-                self.menu.addSeparator()
                 self.menu.addAction(self.tr('Create Note'), self.create)
+                self.menu.addAction(self.tr('All Notes'), self.show_all_notes)
                 first_sync = False
             else:
                 first_sync = True
@@ -63,8 +55,17 @@ class Indicator(QSystemTrayIcon):
                 else:
                     label = self.tr('Last sync: %s') % self.app.provider.get_last_sync()
                 self.menu.addAction(label, Slot()(self.app.provider.sync))
+
+            if len(notes) or self.app.provider.is_first_synced():
+                self.menu.addSeparator()
+                for note_struct in notes:
+                    note = Note.from_tuple(note_struct)
+                    title = note.title[:40].replace('&', '&&')
+                    self.menu.addAction(title, Slot()(
+                        partial(self.open, note=note)
+                    ))
+                self.menu.addSeparator()
         self.menu.addAction(self.tr('Settings and Management'), self.show_management)
-        self.menu.addSeparator()
         self.menu.addAction(self.tr('Exit'), self.exit)
 
     def open(self, note):
