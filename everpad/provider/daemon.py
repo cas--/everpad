@@ -6,6 +6,7 @@ from everpad.provider.tools import set_auth_token, get_db_session
 from everpad.tools import get_auth_token
 from everpad.provider import models
 from PySide.QtCore import QCoreApplication, Slot, QSettings
+from PySide.QtGui import QDesktopServices
 import dbus
 import dbus.mainloop.glib
 import signal
@@ -18,7 +19,9 @@ import argparse
 class ProviderApp(QCoreApplication):
     def __init__(self, verbose, *args, **kwargs):
         QCoreApplication.__init__(self, *args, **kwargs)
-        self.settings = QSettings('everpad', 'everpad-provider')
+        QCoreApplication.setOrganizationName('everpad')
+        QCoreApplication.setApplicationName('everpad-provider')
+        self.settings = QSettings()
         self.verbose = verbose
         session_bus = dbus.SessionBus()
         self.bus = dbus.service.BusName("com.everpad.Provider", session_bus)
@@ -74,6 +77,7 @@ def main():
     fcntl.lockf(fp, fcntl.LOCK_EX | fcntl.LOCK_NB)
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     try:
+        dataDir = QDesktopServices.storageLocation(QDesktopServices.DataLocation)
         os.mkdir(os.path.expanduser('~/.everpad/'))
         os.mkdir(os.path.expanduser('~/.everpad/data/'))
     except OSError:
