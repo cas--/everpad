@@ -101,8 +101,7 @@ class Indicator(QSystemTrayIcon):
                 else:
                     label = self.tr('Last sync: %s') % self.app.provider.get_last_sync()
                 self.menu.addAction(label, Slot()(self.app.provider.sync))
-
-            if len(notes) or self.app.provider.is_first_synced():
+            if not first_sync:
                 self.menu.addSeparator()
                 if len(pin_notes):
                     for struct in pin_notes:
