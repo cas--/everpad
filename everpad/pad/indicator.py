@@ -22,6 +22,7 @@ import fcntl
 import os
 import getpass
 import time
+from datetime import datetime
 
 
 class Indicator(QSystemTrayIcon):
@@ -99,7 +100,8 @@ class Indicator(QSystemTrayIcon):
                 if first_sync:
                     label = self.tr('Please perform first sync')
                 else:
-                    label = self.tr('Last sync: %s') % self.app.provider.get_last_sync()
+                    delta = datetime.now() - datetime.strptime(self.app.provider.get_last_sync(), '%H:%M')
+                    label = self.tr('Last sync: %s') % (delta.seconds // 60)
                 self.menu.addAction(label, Slot()(self.app.provider.sync))
             if not first_sync:
                 self.menu.addSeparator()
