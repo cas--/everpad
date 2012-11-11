@@ -109,7 +109,7 @@ class Indicator(QSystemTrayIcon):
                     label = self.tr('Please perform first sync')
                 else:
                     delta = datetime.now() - datetime.strptime(self.app.provider.get_last_sync(), '%H:%M')
-                    label = self.tr('Last sync: %s') % (delta.seconds // 60)
+                    label = self.tr('Last sync: %s mins ago') % (delta.seconds // 60)
                 self.menu.addAction(label, Slot()(self.app.provider.sync))
         self.menu.addAction(self.tr('Settings and Management'), self.show_management)
         self.menu.addSeparator()
