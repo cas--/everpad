@@ -85,8 +85,8 @@ class Indicator(QSystemTrayIcon):
                 20 - len(pin_notes), Note.ORDER_UPDATED_DESC, 0,
             )
             if len(notes) + len(pin_notes) or self.app.provider.is_first_synced():
-                self.menu.addAction(self.tr('Create Note'), self.create)
-                self.menu.addAction(self.tr('All Notes'), self.show_all_notes)
+                self.menu.addAction(self.tr('Create Note%s') % u'\u2026', self.create)
+                self.menu.addAction(self.tr('All Notes%s') % u'\u2026', self.show_all_notes)
                 first_sync = False
             else:
                 first_sync = True
@@ -101,7 +101,7 @@ class Indicator(QSystemTrayIcon):
                     label = self.tr('Please perform first sync')
                 else:
                     delta = datetime.now() - datetime.strptime(self.app.provider.get_last_sync(), '%H:%M')
-                    label = self.tr('Last sync: %s mins ago') % (delta.seconds // 60)
+                    label = self.tr('Last Sync: %s mins ago') % (delta.seconds // 60)
                 self.menu.addAction(label, Slot()(self.app.provider.sync))
             if not first_sync:
                 self.menu.addSeparator()
@@ -112,7 +112,7 @@ class Indicator(QSystemTrayIcon):
                 for struct in notes:
                     self._add_note(struct)
                 self.menu.addSeparator()
-        self.menu.addAction(self.tr('Settings and Management'), self.show_management)
+        self.menu.addAction(self.tr('Settings%s') % u'\u2026', self.show_management)
         self.menu.addAction(self.tr('Exit'), self.exit)
 
     def open(self, note, search_term=''):
